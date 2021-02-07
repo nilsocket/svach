@@ -30,13 +30,9 @@ func init() {
 	flag.BoolVar(&change, "c", false, "change fileNames, used in conjunction")
 }
 
-var s *svach.Svach
-
 func main() {
 
 	flag.Parse()
-
-	s = svach.New()
 
 	args := flag.Args()
 
@@ -46,9 +42,9 @@ func main() {
 			var nn string
 
 			if !name {
-				nn = s.Clean(n)
+				nn = svach.Clean(n)
 			} else {
-				nn = s.Name(n)
+				nn = svach.Name(n)
 			}
 
 			fmt.Println(nn)
@@ -89,9 +85,9 @@ func rename(old string, info os.FileInfo, err error) error {
 
 	if file != "" {
 		if !name {
-			new = s.Clean(file)
+			new = svach.Clean(file)
 		} else {
-			new = s.Name(file)
+			new = svach.Name(file)
 		}
 
 		if file != new {

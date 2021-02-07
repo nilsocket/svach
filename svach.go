@@ -35,10 +35,8 @@ var (
 
 var iMaxLen = 240
 
-// New returns a Svach object
-func New() *Svach {
-	return &Svach{"", iMaxLen}
-}
+// DefaultSvach for Name and Clean
+var DefaultSvach = &Svach{"", iMaxLen}
 
 var (
 	cntrlExp = regexp.MustCompile("[[:cntrl:]]") // control
@@ -54,7 +52,7 @@ var (
 	leftdotExpr = regexp.MustCompile("^\\.+")
 )
 
-// NewWithOpts returns Svach object, with opts set
+// WithOpts returns Svach object, with opts set
 // and returns error, if conditions aren't met.
 //
 // Conditions:
@@ -62,7 +60,7 @@ var (
 // - replaceStr can't contain Control or Invalid characters
 //
 // - maxlen can't be greater than 255
-func NewWithOpts(replaceStr string, maxLen int) (*Svach, error) {
+func WithOpts(replaceStr string, maxLen int) (*Svach, error) {
 	s := &Svach{"", iMaxLen}
 
 	if err := validOptStr(replaceStr); err != nil {
@@ -87,7 +85,12 @@ func validOptStr(s string) error {
 	return nil
 }
 
-// Name svachs `fileName`
+// Name sanitizes `fileName`
+func Name(fileName string) string {
+	return name(fileName, DefaultSvach.replaceStr, DefaultSvach.maxLen)
+}
+
+// Name sanitizes `fileName`
 func (s *Svach) Name(fileName string) string {
 	return name(fileName, s.replaceStr, s.maxLen)
 }
@@ -125,7 +128,15 @@ var (
 	cleanReplaceWith = []string{"", " ", "_", "-", "+", ".", "!"}
 )
 
-// Clean svachs `fileName` into more humane format.
+// Clean sanitizes `fileName` into more humane format.
+//
+// Remove invisible and control characters, repeated separators.
+// Replace different kinds of spaces with normal space.
+func Clean(fileName string) string {
+	return clean(fileName, DefaultSvach.replaceStr, DefaultSvach.maxLen)
+}
+
+// Clean sanitizes `fileName` into more humane format.
 //
 // Remove invisible and control characters, repeated separators.
 // Replace different kinds of spaces with normal space.

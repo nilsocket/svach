@@ -25,8 +25,9 @@ var (
 var (
 	input, output []string
 )
-var s1 = svach.New()
-var s2, _ = svach.NewWithOpts("-", 235)
+
+var s1 = svach.DefaultSvach
+var s2, _ = svach.WithOpts("-", 235)
 
 func init() {
 	input = fileData(blnsFile)
@@ -143,31 +144,28 @@ func fileExists(name string) bool {
 
 // Examples
 
-func ExampleSvach_Clean() {
-	s := svach.New()
-	res := s.Clean(`.....Hello<>:/---\....W|orld?.!..`)
+func ExampleClean() {
+	res := svach.Clean(`.....Hello<>:/---\....W|orld?.!..`)
 	fmt.Println(res)
 	// Output: .Hello-.World.!
 }
 
-func ExampleNewWithOpts() {
-	s, _ := svach.NewWithOpts(" ", 6)
+func ExampleWithOpts() {
+	s, _ := svach.WithOpts(" ", 6)
 	res := s.Name(`.....H<>e:l.!..`)
 	fmt.Println(res)
 	// Output: .H e l
 }
 
-func ExampleNewWithOpts_error() {
-	_, err := svach.NewWithOpts("?", 6)
+func ExampleWithOpts_error() {
+	_, err := svach.WithOpts("?", 6)
 	fmt.Println(err)
 	// Output: Invalid characters like `., <, >, :, ", /, \, |, ?, *` exist in replaceStr
 }
 
-func ExampleNew() {
-	s := svach.New()
-
+func ExampleName() {
 	// Incase of invalid filename, md5sum of filename is returned.
-	res := s.Name(`<>:"/\|?*`)
+	res := svach.Name(`<>:"/\|?*`)
 	fmt.Println(res)
 	// Output: 3e4bde3cb1e4c9cfa2db74bbc536d5e2
 }
